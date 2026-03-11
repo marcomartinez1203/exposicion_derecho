@@ -3,15 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Evolución Constitucional en Colombia</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -28,12 +26,12 @@
             --text-muted: #a0a3b0;
             --red: #C0392B;
             --green: #27AE60;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(212, 168, 67, 0.12);
+            --glass-bg: rgba(255,255,255,0.03);
+            --glass-border: rgba(212,168,67,0.12);
+            --nav-h: 56px;
         }
 
-        html,
-        body {
+        html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -65,16 +63,23 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 50px 80px 70px;
+            padding: 50px 80px var(--nav-h);
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
+            transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .slide.active {
             opacity: 1;
             visibility: visible;
         }
+
+        /* scrollbar inside slide */
+        .slide::-webkit-scrollbar { width: 3px; }
+        .slide::-webkit-scrollbar-track { background: transparent; }
+        .slide::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.2); border-radius: 3px; }
 
         /* ── Animated Backgrounds ── */
         .slide::before {
@@ -83,46 +88,40 @@
             inset: 0;
             z-index: 0;
             transition: opacity 0.7s;
+            pointer-events: none;
         }
 
-        .slide>* {
-            position: relative;
-            z-index: 1;
-        }
+        .slide > * { position: relative; z-index: 1; }
 
         .bg-hero::before {
             background:
-                radial-gradient(ellipse 600px 400px at 25% 40%, rgba(212, 168, 67, 0.12) 0%, transparent 100%),
-                radial-gradient(ellipse 500px 500px at 75% 70%, rgba(26, 58, 92, 0.35) 0%, transparent 100%),
-                radial-gradient(ellipse 300px 300px at 50% 10%, rgba(212, 168, 67, 0.06) 0%, transparent 100%),
+                radial-gradient(ellipse 600px 400px at 25% 40%, rgba(212,168,67,0.12) 0%, transparent 100%),
+                radial-gradient(ellipse 500px 500px at 75% 70%, rgba(26,58,92,0.35) 0%, transparent 100%),
+                radial-gradient(ellipse 300px 300px at 50% 10%, rgba(212,168,67,0.06) 0%, transparent 100%),
                 var(--dark);
         }
-
         .bg-blue::before {
             background:
-                radial-gradient(ellipse 600px 500px at 85% 15%, rgba(26, 58, 92, 0.45) 0%, transparent 100%),
-                radial-gradient(ellipse 400px 400px at 15% 85%, rgba(212, 168, 67, 0.06) 0%, transparent 100%),
+                radial-gradient(ellipse 600px 500px at 85% 15%, rgba(26,58,92,0.45) 0%, transparent 100%),
+                radial-gradient(ellipse 400px 400px at 15% 85%, rgba(212,168,67,0.06) 0%, transparent 100%),
                 var(--dark);
         }
-
         .bg-gold::before {
             background:
-                radial-gradient(ellipse 500px 500px at 50% 45%, rgba(212, 168, 67, 0.1) 0%, transparent 100%),
-                radial-gradient(ellipse 600px 400px at 10% 80%, rgba(26, 58, 92, 0.3) 0%, transparent 100%),
+                radial-gradient(ellipse 500px 500px at 50% 45%, rgba(212,168,67,0.1) 0%, transparent 100%),
+                radial-gradient(ellipse 600px 400px at 10% 80%, rgba(26,58,92,0.3) 0%, transparent 100%),
                 var(--dark);
         }
-
         .bg-dark::before {
             background:
-                radial-gradient(ellipse 500px 400px at 60% 25%, rgba(15, 22, 41, 0.8) 0%, transparent 100%),
-                radial-gradient(ellipse 400px 400px at 30% 75%, rgba(192, 57, 43, 0.06) 0%, transparent 100%),
+                radial-gradient(ellipse 500px 400px at 60% 25%, rgba(15,22,41,0.8) 0%, transparent 100%),
+                radial-gradient(ellipse 400px 400px at 30% 75%, rgba(192,57,43,0.06) 0%, transparent 100%),
                 var(--dark);
         }
-
         .bg-green::before {
             background:
-                radial-gradient(ellipse 600px 500px at 35% 35%, rgba(39, 174, 96, 0.08) 0%, transparent 100%),
-                radial-gradient(ellipse 500px 400px at 75% 75%, rgba(26, 58, 92, 0.3) 0%, transparent 100%),
+                radial-gradient(ellipse 600px 500px at 35% 35%, rgba(39,174,96,0.08) 0%, transparent 100%),
+                radial-gradient(ellipse 500px 400px at 75% 75%, rgba(26,58,92,0.3) 0%, transparent 100%),
                 var(--dark);
         }
 
@@ -130,13 +129,14 @@
         .slide::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: var(--nav-h);
             left: 0;
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent 5%, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent 95%);
             z-index: 2;
             opacity: 0.6;
+            pointer-events: none;
         }
 
         /* ── Corner Decorations ── */
@@ -146,140 +146,48 @@
             height: 60px;
             z-index: 2;
             opacity: 0.15;
+            pointer-events: none;
         }
-
-        .corner-deco.tl {
-            top: 20px;
-            left: 20px;
-            border-top: 2px solid var(--gold);
-            border-left: 2px solid var(--gold);
-        }
-
-        .corner-deco.tr {
-            top: 20px;
-            right: 20px;
-            border-top: 2px solid var(--gold);
-            border-right: 2px solid var(--gold);
-        }
-
-        .corner-deco.bl {
-            bottom: 70px;
-            left: 20px;
-            border-bottom: 2px solid var(--gold);
-            border-left: 2px solid var(--gold);
-        }
-
-        .corner-deco.br {
-            bottom: 70px;
-            right: 20px;
-            border-bottom: 2px solid var(--gold);
-            border-right: 2px solid var(--gold);
-        }
+        .corner-deco.tl { top: 20px; left: 20px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+        .corner-deco.tr { top: 20px; right: 20px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+        .corner-deco.bl { bottom: calc(var(--nav-h) + 20px); left: 20px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+        .corner-deco.br { bottom: calc(var(--nav-h) + 20px); right: 20px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
 
         /* ── Entrance Animations ── */
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
-
         @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.9); }
+            to   { opacity: 1; transform: scale(1); }
         }
-
         @keyframes shimmer {
-            0% {
-                background-position: -200% center;
-            }
-
-            100% {
-                background-position: 200% center;
-            }
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
         }
-
         @keyframes pulseGlow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(212, 168, 67, 0.1);
-            }
-
-            50% {
-                box-shadow: 0 0 35px rgba(212, 168, 67, 0.2);
-            }
+            0%, 100% { box-shadow: 0 0 20px rgba(212,168,67,0.1); }
+            50%       { box-shadow: 0 0 35px rgba(212,168,67,0.2); }
         }
-
         @keyframes floatSoft {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-6px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-6px); }
         }
 
-        .slide.active .anim-fade-up {
-            animation: fadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
-        }
-
-        .slide.active .anim-fade-in {
-            animation: fadeIn 0.6s ease both;
-        }
-
-        .slide.active .anim-scale-in {
-            animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
-        }
-
-        .slide.active .d1 {
-            animation-delay: 0.1s;
-        }
-
-        .slide.active .d2 {
-            animation-delay: 0.2s;
-        }
-
-        .slide.active .d3 {
-            animation-delay: 0.35s;
-        }
-
-        .slide.active .d4 {
-            animation-delay: 0.5s;
-        }
-
-        .slide.active .d5 {
-            animation-delay: 0.65s;
-        }
-
-        .slide.active .d6 {
-            animation-delay: 0.8s;
-        }
+        .slide.active .anim-fade-up   { animation: fadeUp  0.7s cubic-bezier(0.4,0,0.2,1) both; }
+        .slide.active .anim-fade-in   { animation: fadeIn  0.6s ease both; }
+        .slide.active .anim-scale-in  { animation: scaleIn 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+        .slide.active .d1 { animation-delay: 0.1s; }
+        .slide.active .d2 { animation-delay: 0.2s; }
+        .slide.active .d3 { animation-delay: 0.35s; }
+        .slide.active .d4 { animation-delay: 0.5s; }
+        .slide.active .d5 { animation-delay: 0.65s; }
+        .slide.active .d6 { animation-delay: 0.8s; }
 
         /* ── Typography ── */
         .slide-title {
@@ -296,10 +204,7 @@
             background-clip: text;
             animation: shimmer 4s linear infinite;
         }
-
-        .slide-title.large {
-            font-size: 4.2rem;
-        }
+        .slide-title.large { font-size: 4.2rem; }
 
         .slide-subtitle {
             font-size: 1.4rem;
@@ -320,32 +225,18 @@
             position: relative;
             padding: 0 20px;
         }
-
-        .section-label::before,
-        .section-label::after {
+        .section-label::before, .section-label::after {
             content: '';
             position: absolute;
             top: 50%;
             width: 30px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold));
         }
-
-        .section-label::before {
-            right: 100%;
-            background: linear-gradient(90deg, transparent, var(--gold));
-        }
-
-        .section-label::after {
-            left: 100%;
-            background: linear-gradient(90deg, var(--gold), transparent);
-        }
+        .section-label::before { right: 100%; background: linear-gradient(90deg, transparent, var(--gold)); }
+        .section-label::after  { left:  100%; background: linear-gradient(90deg, var(--gold), transparent); }
 
         /* ── Glassmorphism Cards ── */
-        .content-area {
-            max-width: 1000px;
-            width: 100%;
-        }
+        .content-area { max-width: 1000px; width: 100%; }
 
         .card-grid {
             display: grid;
@@ -354,45 +245,31 @@
             width: 100%;
             max-width: 1000px;
         }
-
-        .card-grid.three-col {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .card-grid.single-col {
-            grid-template-columns: 1fr;
-            max-width: 800px;
-        }
+        .card-grid.three-col   { grid-template-columns: repeat(3, 1fr); }
+        .card-grid.single-col  { grid-template-columns: 1fr; max-width: 800px; }
 
         .card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(212, 168, 67, 0.1);
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(212,168,67,0.1);
             border-radius: 18px;
             padding: 26px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.4s,
-                box-shadow 0.4s;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), border-color 0.4s, box-shadow 0.4s;
             position: relative;
             overflow: hidden;
         }
-
         .card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(212, 168, 67, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(212,168,67,0.3), transparent);
         }
-
         .card:hover {
             transform: translateY(-4px);
-            border-color: rgba(212, 168, 67, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3),
-                0 0 30px rgba(212, 168, 67, 0.06);
+            border-color: rgba(212,168,67,0.3);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 30px rgba(212,168,67,0.06);
         }
 
         .card-year {
@@ -405,7 +282,6 @@
             background-clip: text;
             margin-bottom: 8px;
         }
-
         .card-label {
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -414,27 +290,11 @@
             opacity: 0.8;
             margin-bottom: 6px;
         }
+        .card-heading { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; color: #fff; }
+        .card p, .content-text { font-size: 1.1rem; line-height: 1.7; color: var(--text-muted); }
+        .content-text { max-width: 780px; text-align: center; }
 
-        .card-heading {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .card p,
-        .content-text {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-muted);
-        }
-
-        .content-text {
-            max-width: 780px;
-            text-align: center;
-        }
-
-        /* ── Tags with glow ── */
+        /* ── Tags ── */
         .tag {
             display: inline-block;
             padding: 6px 16px;
@@ -446,49 +306,13 @@
             margin-top: 10px;
             margin-right: 4px;
         }
+        .tag-central { background: rgba(192,57,43,0.15); color:#E74C3C; border:1px solid rgba(192,57,43,0.25); }
+        .tag-federal  { background: rgba(41,128,185,0.15); color:#3498DB; border:1px solid rgba(41,128,185,0.25); }
+        .tag-liberal  { background: rgba(39,174,96,0.15);  color:#2ECC71; border:1px solid rgba(39,174,96,0.25); }
+        .tag-conserv  { background: rgba(243,156,18,0.15); color:#F39C12; border:1px solid rgba(243,156,18,0.25); }
+        .tag-social   { background: rgba(155,89,182,0.15); color:#BB6BD9; border:1px solid rgba(155,89,182,0.25); }
 
-        .tag-central {
-            background: rgba(192, 57, 43, 0.15);
-            color: #E74C3C;
-            border: 1px solid rgba(192, 57, 43, 0.25);
-            box-shadow: 0 0 12px rgba(192, 57, 43, 0.08);
-        }
-
-        .tag-federal {
-            background: rgba(41, 128, 185, 0.15);
-            color: #3498DB;
-            border: 1px solid rgba(41, 128, 185, 0.25);
-            box-shadow: 0 0 12px rgba(41, 128, 185, 0.08);
-        }
-
-        .tag-liberal {
-            background: rgba(39, 174, 96, 0.15);
-            color: #2ECC71;
-            border: 1px solid rgba(39, 174, 96, 0.25);
-            box-shadow: 0 0 12px rgba(39, 174, 96, 0.08);
-        }
-
-        .tag-conserv {
-            background: rgba(243, 156, 18, 0.15);
-            color: #F39C12;
-            border: 1px solid rgba(243, 156, 18, 0.25);
-            box-shadow: 0 0 12px rgba(243, 156, 18, 0.08);
-        }
-
-        .tag-social {
-            background: rgba(155, 89, 182, 0.15);
-            color: #BB6BD9;
-            border: 1px solid rgba(155, 89, 182, 0.25);
-            box-shadow: 0 0 12px rgba(155, 89, 182, 0.08);
-        }
-
-        .vigencia {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-            font-style: italic;
-            opacity: 0.8;
-        }
+        .vigencia { font-size: 0.9rem; color: var(--text-muted); margin-top: 10px; font-style: italic; opacity: 0.8; }
 
         /* ── Timeline ── */
         .timeline {
@@ -499,158 +323,97 @@
             max-width: 900px;
             margin-top: 30px;
         }
-
-        .timeline-item {
-            flex: 1;
-            text-align: center;
-            position: relative;
-        }
-
+        .timeline-item { flex: 1; text-align: center; position: relative; }
         .timeline-item::after {
             content: '';
             position: absolute;
             top: 25px;
-            left: 55%;
-            right: -45%;
+            left: 55%; right: -45%;
             height: 2px;
-            background: linear-gradient(90deg, var(--gold), rgba(212, 168, 67, 0.2));
+            background: linear-gradient(90deg, var(--gold), rgba(212,168,67,0.2));
         }
-
-        .timeline-item:last-child::after {
-            display: none;
-        }
-
+        .timeline-item:last-child::after { display: none; }
         .timeline-dot {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--dark);
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--dark);
+            position: relative; z-index: 1;
+            box-shadow: 0 0 20px rgba(212,168,67,0.25);
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
-        .timeline-dot:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.4);
-        }
-
-        .timeline-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+        .timeline-dot:hover { transform: scale(1.15); box-shadow: 0 0 30px rgba(212,168,67,0.4); }
+        .timeline-label { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
 
         /* ── Stat Boxes ── */
-        .stats-row {
-            display: flex;
-            gap: 24px;
-            margin-top: 28px;
-        }
-
+        .stats-row { display: flex; gap: 24px; margin-top: 28px; }
         .stat-box {
             text-align: center;
             padding: 22px 28px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
-            border: 1px solid rgba(212, 168, 67, 0.1);
+            background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(212,168,67,0.1);
             border-radius: 16px;
             backdrop-filter: blur(10px);
+            flex: 1;
             transition: transform 0.3s, box-shadow 0.3s;
             animation: pulseGlow 4s ease-in-out infinite;
         }
-
-        .stat-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-        }
-
+        .stat-box:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
         .stat-number {
             font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 900;
+            font-size: 3rem; font-weight: 900;
             background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
-        .stat-label {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        .stat-label { font-size: 0.95rem; color: var(--text-muted); margin-top: 4px; }
 
         /* ── Bullet List ── */
-        .bullet-list {
-            list-style: none;
-            max-width: 800px;
-        }
-
+        .bullet-list { list-style: none; max-width: 800px; width: 100%; }
         .bullet-list li {
             padding: 12px 0 12px 30px;
             position: relative;
             font-size: 1.15rem;
             line-height: 1.6;
             color: var(--text-muted);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
             transition: color 0.3s, padding-left 0.3s;
         }
-
-        .bullet-list li:last-child {
-            border-bottom: none;
-        }
-
-        .bullet-list li:hover {
-            color: var(--text-light);
-            padding-left: 36px;
-        }
-
+        .bullet-list li:last-child { border-bottom: none; }
+        .bullet-list li:hover { color: var(--text-light); padding-left: 36px; }
         .bullet-list li::before {
             content: '';
             position: absolute;
-            left: 6px;
-            top: 18px;
-            width: 8px;
-            height: 8px;
+            left: 6px; top: 18px;
+            width: 8px; height: 8px;
             background: var(--gold);
             border-radius: 2px;
             transform: rotate(45deg);
             transition: transform 0.3s;
         }
+        .bullet-list li:hover::before { transform: rotate(45deg) scale(1.3); }
 
-        .bullet-list li:hover::before {
-            transform: rotate(45deg) scale(1.3);
-        }
-
-        /* ── Navigation ── */
+        /* ── Navigation Bar ── */
         .nav-bar {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 56px;
-            background: rgba(6, 10, 20, 0.92);
+            bottom: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: rgba(6,10,20,0.92);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(212, 168, 67, 0.1);
+            border-top: 1px solid rgba(212,168,67,0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 30px;
             z-index: 100;
+            /* Safe area for notch phones */
+            padding-bottom: env(safe-area-inset-bottom);
         }
-
         .nav-btn {
-            background: linear-gradient(135deg, rgba(212, 168, 67, 0.08), rgba(212, 168, 67, 0.04));
-            border: 1px solid rgba(212, 168, 67, 0.2);
+            background: linear-gradient(135deg, rgba(212,168,67,0.08), rgba(212,168,67,0.04));
+            border: 1px solid rgba(212,168,67,0.2);
             color: var(--gold);
             padding: 10px 28px;
             border-radius: 10px;
@@ -658,25 +421,20 @@
             font-size: 0.82rem;
             font-weight: 500;
             font-family: 'Inter', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             letter-spacing: 0.5px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
         }
-
         .nav-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, rgba(212, 168, 67, 0.2), rgba(212, 168, 67, 0.1));
+            background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(212,168,67,0.1));
             border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.12);
+            box-shadow: 0 0 20px rgba(212,168,67,0.12);
             transform: translateY(-1px);
         }
-
-        .nav-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.2;
-            cursor: default;
-        }
+        .nav-btn:active:not(:disabled) { transform: scale(0.96); }
+        .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
         .slide-counter {
             font-size: 0.82rem;
@@ -688,66 +446,50 @@
         /* ── Progress Bar ── */
         .progress-bar {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold));
             background-size: 300% 100%;
             animation: shimmer 3s linear infinite;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
             z-index: 100;
-            box-shadow: 0 0 10px rgba(212, 168, 67, 0.4);
+            box-shadow: 0 0 10px rgba(212,168,67,0.4);
         }
 
         /* ── Keyboard hint ── */
         .hint {
             position: fixed;
-            bottom: 66px;
-            right: 28px;
+            bottom: 66px; right: 28px;
             font-size: 0.65rem;
-            color: rgba(154, 157, 170, 0.3);
+            color: rgba(154,157,170,0.3);
             z-index: 100;
             letter-spacing: 0.5px;
         }
 
-        /* ── Flag colors decorator ── */
+        /* ── Flag colors ── */
         .flag-bar {
             display: flex;
-            width: 100px;
-            height: 4px;
+            width: 100px; height: 4px;
             border-radius: 4px;
             overflow: hidden;
             margin: 18px auto 0;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
-
-        .flag-bar span {
-            flex: 1;
-        }
-
-        .flag-yellow {
-            background: linear-gradient(180deg, #FCD116, #e5b800);
-        }
-
-        .flag-blue {
-            background: linear-gradient(180deg, #003893, #002766);
-        }
-
-        .flag-red {
-            background: linear-gradient(180deg, #CE1126, #a00d1e);
-        }
+        .flag-bar span { flex: 1; }
+        .flag-yellow { background: linear-gradient(180deg,#FCD116,#e5b800); }
+        .flag-blue   { background: linear-gradient(180deg,#003893,#002766); }
+        .flag-red    { background: linear-gradient(180deg,#CE1126,#a00d1e); }
 
         /* ── Integrantes Box ── */
         .integrantes-box {
             margin-top: 24px;
             text-align: center;
             padding: 20px 40px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-            border: 1px solid rgba(212, 168, 67, 0.08);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid rgba(212,168,67,0.08);
             border-radius: 16px;
             backdrop-filter: blur(10px);
         }
-
         .integrantes-label {
             color: var(--gold);
             font-size: 0.7rem;
@@ -757,18 +499,10 @@
             margin-bottom: 10px;
             opacity: 0.7;
         }
-
-        .integrantes-names {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            line-height: 1.8;
-        }
-
+        .integrantes-names { font-size: 0.95rem; color: var(--text-muted); letter-spacing: 0.5px; line-height: 1.8; }
         .integrantes-names .sep {
             display: inline-block;
-            width: 4px;
-            height: 4px;
+            width: 4px; height: 4px;
             background: var(--gold);
             border-radius: 50%;
             margin: 0 14px;
@@ -776,26 +510,23 @@
             opacity: 0.5;
         }
 
-        /* ── Slide Number Indicator ── */
+        /* ── Slide Number ── */
         .slide-num {
             position: absolute;
-            top: 28px;
-            right: 32px;
+            top: 28px; right: 32px;
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: rgba(212, 168, 67, 0.04);
-            z-index: 0;
-            line-height: 1;
+            font-size: 3.5rem; font-weight: 900;
+            color: rgba(212,168,67,0.04);
+            z-index: 0; line-height: 1;
+            pointer-events: none;
         }
 
-        /* ── Slide Images ── */
+        /* ── Split layout ── */
         .slide-split {
             flex-direction: row !important;
             gap: 50px;
-            padding: 50px 60px 70px;
+            padding: 50px 60px var(--nav-h);
         }
-
         .slide-split .split-content {
             flex: 1;
             display: flex;
@@ -803,13 +534,9 @@
             justify-content: center;
             align-items: flex-start;
         }
-
         .slide-split .split-content .section-label,
         .slide-split .split-content .slide-title,
-        .slide-split .split-content .content-text {
-            text-align: left;
-        }
-
+        .slide-split .split-content .content-text { text-align: left; }
         .slide-split .split-image {
             flex: 0 0 380px;
             display: flex;
@@ -821,464 +548,217 @@
             position: relative;
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(212, 168, 67, 0.15);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
-                0 0 40px rgba(212, 168, 67, 0.06);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s;
+            border: 1px solid rgba(212,168,67,0.15);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,168,67,0.06);
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s;
         }
-
         .img-frame:hover {
             transform: scale(1.02);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5),
-                0 0 50px rgba(212, 168, 67, 0.1);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 50px rgba(212,168,67,0.1);
         }
-
         .img-frame::after {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 50%, rgba(6, 10, 20, 0.6) 100%);
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(6,10,20,0.6) 100%);
             pointer-events: none;
         }
-
-        .img-frame img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .img-frame.large {
-            width: 380px;
-            height: 280px;
-        }
-
-        .img-frame.medium {
-            width: 320px;
-            height: 240px;
-        }
+        .img-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .img-frame.large  { width: 380px; height: 280px; }
+        .img-frame.medium { width: 320px; height: 240px; }
 
         .img-hero {
-            width: 200px;
-            height: 200px;
+            width: 200px; height: 200px;
             border-radius: 50%;
             overflow: hidden;
-            border: 2px solid rgba(212, 168, 67, 0.2);
-            box-shadow: 0 0 40px rgba(212, 168, 67, 0.1),
-                0 20px 50px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(212,168,67,0.2);
+            box-shadow: 0 0 40px rgba(212,168,67,0.1), 0 20px 50px rgba(0,0,0,0.4);
             margin-bottom: 10px;
             animation: floatSoft 5s ease-in-out infinite;
         }
+        .img-hero img { width: 100%; height: 100%; object-fit: cover; }
 
-        .img-hero img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .img-inline {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(212, 168, 67, 0.12);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
-            margin-top: 20px;
-        }
-
-        .img-inline img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        /* ── Responsive Tablets ── */
+        /* ══════════════════════════════════════════
+           TABLET  (≤ 900px)
+        ══════════════════════════════════════════ */
         @media (max-width: 900px) {
-            .slide {
-                padding: 40px 24px 70px;
-            }
-
-            .slide-title {
-                font-size: 2rem;
-            }
-
-            .slide-title.large {
-                font-size: 2.8rem;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .card-grid.three-col {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-row {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .timeline {
-                flex-direction: column;
-                gap: 14px;
-            }
-
-            .timeline-item::after {
-                display: none;
-            }
-
-            .integrantes-names .sep {
-                display: none;
-            }
-
-            .integrantes-names span {
-                display: block;
-            }
-
-            .corner-deco {
-                display: none;
-            }
-
+            .slide { padding: 40px 24px var(--nav-h); }
+            .slide-title      { font-size: 2rem; }
+            .slide-title.large{ font-size: 2.8rem; }
+            .card-grid        { grid-template-columns: 1fr; }
+            .card-grid.three-col { grid-template-columns: repeat(2, 1fr); }
+            .stats-row        { flex-wrap: wrap; gap: 12px; }
+            .stat-box         { min-width: calc(50% - 6px); }
+            .timeline         { flex-direction: column; gap: 14px; }
+            .timeline-item::after { display: none; }
+            .corner-deco      { display: none; }
             .slide-split {
                 flex-direction: column !important;
                 gap: 20px;
+                padding: 30px 24px var(--nav-h);
             }
-
-            .slide-split .split-image {
-                flex: 0 0 auto;
-            }
-
-            .img-frame.large,
-            .img-frame.medium {
-                width: 100%;
-                max-width: 280px;
-                height: 200px;
-            }
-
-            .img-hero {
-                width: 140px;
-                height: 140px;
-            }
+            .slide-split .split-image { flex: 0 0 auto; align-self: center; }
+            .slide-split .split-content { align-items: center; }
+            .slide-split .split-content .section-label,
+            .slide-split .split-content .slide-title,
+            .slide-split .split-content .content-text { text-align: center; }
+            .img-frame.large, .img-frame.medium { width: 100%; max-width: 320px; height: 220px; }
+            .img-hero { width: 140px; height: 140px; }
+            .integrantes-names .sep { display: none; }
+            .integrantes-names span { display: block; }
         }
 
-        /* ── Responsive Mobile ── */
+        /* ══════════════════════════════════════════
+           MOBILE  (≤ 640px)
+           KEY CHANGES vs original:
+           - Keep overflow:hidden + fixed slides (no scroll-all)
+           - Add internal scroll on each slide
+           - Reduce all font sizes + paddings significantly
+           - Cards stack 1-col always
+           - Stats wrap to 2-col grid
+           - Timeline: horizontal compact scroll
+           - Nav bar thinner with icon-only prev/next
+           - Animations faster
+        ══════════════════════════════════════════ */
         @media (max-width: 640px) {
-            html,
-            body {
-                overflow: auto;
-                height: auto;
-            }
+            :root { --nav-h: 52px; }
 
             .slide {
-                position: relative;
-                inset: auto;
-                padding: 20px 16px 90px;
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .slides-container {
-                display: flex;
-                flex-direction: column;
-                height: auto;
-                overflow: auto;
+                padding: 20px 16px calc(var(--nav-h) + 10px);
+                justify-content: flex-start;
+                padding-top: 28px;
             }
 
             /* Typography */
-            .slide-title {
-                font-size: 1.5rem;
-                margin-bottom: 8px;
-            }
-
-            .slide-title.large {
-                font-size: 1.8rem;
-            }
-
-            .slide-subtitle {
-                font-size: 0.95rem;
-                margin-bottom: 20px;
-            }
-
-            .section-label {
-                font-size: 0.75rem;
-                letter-spacing: 3px;
-                margin-bottom: 10px;
-                padding: 0 10px;
-            }
-
-            .section-label::before,
-            .section-label::after {
-                width: 20px;
-            }
-
-            .content-text {
-                font-size: 0.95rem;
-                line-height: 1.6;
-            }
+            .slide-title       { font-size: 1.55rem; margin-bottom: 8px; }
+            .slide-title.large { font-size: 1.9rem; }
+            .slide-subtitle    { font-size: 1rem; margin-bottom: 16px; }
+            .section-label     { font-size: 0.72rem; letter-spacing: 3px; margin-bottom: 8px; padding: 0 12px; }
+            .section-label::before, .section-label::after { width: 18px; }
+            .content-text      { font-size: 0.95rem; line-height: 1.65; }
 
             /* Cards */
-            .card {
-                padding: 18px;
-                border-radius: 12px;
-            }
+            .card              { padding: 16px; border-radius: 14px; }
+            .card-year         { font-size: 1.6rem; margin-bottom: 5px; }
+            .card-heading      { font-size: 1.05rem; margin-bottom: 7px; }
+            .card p            { font-size: 0.88rem; line-height: 1.55; }
+            .card-label        { font-size: 0.75rem; letter-spacing: 1.5px; }
 
-            .card-year {
-                font-size: 1.5rem;
-                margin-bottom: 6px;
-            }
+            /* Grids – always 1 col on mobile */
+            .card-grid,
+            .card-grid.three-col { grid-template-columns: 1fr; gap: 10px; }
 
-            .card-heading {
-                font-size: 1.05rem;
-                margin-bottom: 8px;
-            }
+            /* Tags */
+            .tag     { font-size: 0.65rem; padding: 4px 10px; margin-top: 6px; }
+            .vigencia{ font-size: 0.78rem; margin-top: 6px; }
 
-            .card p {
-                font-size: 0.9rem;
-            }
-
-            .tag {
-                font-size: 0.65rem;
-                padding: 4px 10px;
-                margin-top: 6px;
-            }
-
-            .vigencia {
-                font-size: 0.8rem;
-                margin-top: 6px;
-            }
-
-            /* Grid layouts */
-            .card-grid {
-                gap: 12px;
-            }
-
-            .card-grid.three-col {
-                grid-template-columns: 1fr;
-            }
-
-            /* Stats */
+            /* Stats – 2-col grid instead of flex row */
             .stats-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
-                margin-top: 20px;
+                margin-top: 18px;
             }
-
             .stat-box {
-                padding: 16px 20px;
+                padding: 14px 10px;
                 border-radius: 12px;
+                min-width: unset;
             }
+            .stat-number { font-size: 1.9rem; }
+            .stat-label  { font-size: 0.78rem; margin-top: 2px; }
 
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .stat-label {
-                font-size: 0.8rem;
-            }
-
-            /* Timeline */
+            /* Timeline – horizontal compact with scroll */
             .timeline {
-                gap: 10px;
-                margin-top: 20px;
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 0;
+                margin-top: 18px;
+                padding-bottom: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
             }
-
+            .timeline::-webkit-scrollbar { display: none; }
             .timeline-item {
-                text-align: center;
+                flex: 0 0 80px;
+                min-width: 80px;
             }
-
-            .timeline-dot {
-                width: 40px;
-                height: 40px;
-                font-size: 0.7rem;
-                margin: 0 auto 8px;
+            .timeline-item::after {
+                display: block;
+                top: 20px;
+                left: 55%; right: -45%;
+                height: 1.5px;
             }
-
-            .timeline-label {
-                font-size: 0.8rem;
-            }
+            .timeline-dot  { width: 40px; height: 40px; font-size: 0.65rem; margin-bottom: 8px; }
+            .timeline-label{ font-size: 0.72rem; }
 
             /* Images */
-            .img-hero {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 8px;
+            .img-hero { width: 90px; height: 90px; margin-bottom: 8px; }
+            .img-frame.large, .img-frame.medium {
+                width: 100%; max-width: 100%;
+                height: 160px;
             }
+            .slide-split { gap: 14px; padding-top: 22px; }
+            .slide-split .split-image { width: 100%; }
 
-            .img-frame.large,
-            .img-frame.medium {
-                width: 100%;
-                max-width: 100%;
-                height: 150px;
-            }
+            /* Bullet list */
+            .bullet-list li { padding: 9px 0 9px 22px; font-size: 0.9rem; }
+            .bullet-list li::before { width: 6px; height: 6px; top: 14px; }
 
-            .img-inline {
-                max-width: 100%;
-                margin-top: 15px;
-            }
+            /* Slide number */
+            .slide-num { font-size: 2.2rem; top: 10px; right: 12px; }
 
-            /* Lists */
-            .bullet-list li {
-                padding: 8px 0 8px 24px;
-                font-size: 0.95rem;
-            }
+            /* Flag */
+            .flag-bar { width: 72px; height: 3px; margin-top: 12px; }
 
-            .bullet-list li::before {
-                width: 6px;
-                height: 6px;
-            }
-
-            /* Decorations */
-            .slide::after {
-                height: 1px;
-            }
-
-            .slide-num {
-                font-size: 2.5rem;
-                top: 12px;
-                right: 16px;
-                opacity: 0.02;
-            }
-
-            .flag-bar {
-                width: 80px;
-                margin: 12px auto 0;
-            }
-
-            /* Boxes */
-            .integrantes-box {
-                margin-top: 16px;
-                padding: 14px 20px;
-                border-radius: 12px;
-            }
-
-            .integrantes-label {
-                font-size: 0.65rem;
-                letter-spacing: 2px;
-                margin-bottom: 6px;
-            }
-
-            .integrantes-names {
-                font-size: 0.85rem;
-                line-height: 1.6;
-            }
+            /* Integrantes */
+            .integrantes-box   { margin-top: 14px; padding: 14px 16px; border-radius: 12px; }
+            .integrantes-label { font-size: 0.65rem; letter-spacing: 2px; margin-bottom: 6px; }
+            .integrantes-names { font-size: 0.85rem; line-height: 1.7; }
+            .integrantes-names .sep { display: none; }
+            .integrantes-names span { display: block; }
 
             /* Navigation */
-            .nav-bar {
-                height: 50px;
-                padding: 0 12px;
-                background: rgba(6, 10, 20, 0.95);
-            }
+            .nav-bar { padding: 0 10px; padding-bottom: env(safe-area-inset-bottom); }
+            .nav-btn  { padding: 9px 16px; font-size: 0.75rem; border-radius: 8px; }
+            .slide-counter { font-size: 0.72rem; letter-spacing: 1.5px; }
 
-            .nav-btn {
-                padding: 8px 14px;
-                font-size: 0.7rem;
-                border-radius: 8px;
-            }
-
-            .slide-counter {
-                font-size: 0.7rem;
-                letter-spacing: 1px;
-            }
-
-            /* Hint */
-            .hint {
-                display: none;
-                bottom: 60px;
-                font-size: 0.6rem;
-            }
+            /* Hint hidden on mobile */
+            .hint { display: none; }
 
             /* Progress bar */
-            .progress-bar {
-                height: 2px;
-            }
+            .progress-bar { height: 2px; }
 
-            /* Content area */
-            .content-area {
-                max-width: 100%;
-            }
+            /* Faster animations on mobile */
+            .slide.active .anim-fade-up  { animation-duration: 0.45s !important; }
+            .slide.active .anim-scale-in { animation-duration: 0.4s !important; }
+            .slide.active .d1 { animation-delay: 0s !important; }
+            .slide.active .d2 { animation-delay: 0.06s !important; }
+            .slide.active .d3 { animation-delay: 0.12s !important; }
+            .slide.active .d4 { animation-delay: 0.18s !important; }
+            .slide.active .d5 { animation-delay: 0.24s !important; }
+            .slide.active .d6 { animation-delay: 0.3s !important; }
 
-            /* Animations - simplify on mobile */
-            @keyframes fadeUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(15px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+            /* Slide 1 (portada) — stack everything nicely */
+            #slide-0 { text-align: center; }
 
-            /* Disable some animations on mobile */
-            .slide.active .anim-fade-up {
-                animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both !important;
-            }
+            /* Corner decos off */
+            .corner-deco { display: none; }
 
-            .slide.active .d1 {
-                animation-delay: 0s !important;
-            }
-
-            .slide.active .d2 {
-                animation-delay: 0.05s !important;
-            }
-
-            .slide.active .d3 {
-                animation-delay: 0.1s !important;
-            }
-
-            .slide.active .d4 {
-                animation-delay: 0.15s !important;
-            }
-
-            .slide.active .d5 {
-                animation-delay: 0.2s !important;
-            }
-
-            .slide.active .d6 {
-                animation-delay: 0.25s !important;
-            }
+            /* Single-col grid stays single */
+            .card-grid.single-col { max-width: 100%; }
         }
 
-        /* ── Extra Small Mobile (< 375px) ── */
+        /* ── Extra Small (< 375px) ── */
         @media (max-width: 374px) {
-            .slide {
-                padding: 16px 12px 85px;
-            }
-
-            .slide-title {
-                font-size: 1.2rem;
-            }
-
-            .slide-title.large {
-                font-size: 1.4rem;
-            }
-
-            .slide-subtitle {
-                font-size: 0.85rem;
-            }
-
-            .section-label {
-                font-size: 0.65rem;
-                letter-spacing: 2px;
-            }
-
-            .card-heading {
-                font-size: 0.95rem;
-            }
-
-            .stat-number {
-                font-size: 1.5rem;
-            }
-
-            .img-hero {
-                width: 80px;
-                height: 80px;
-            }
-
-            .nav-btn {
-                padding: 6px 10px;
-                font-size: 0.65rem;
-            }
+            .slide        { padding: 18px 12px calc(var(--nav-h) + 8px); }
+            .slide-title  { font-size: 1.25rem; }
+            .slide-title.large { font-size: 1.5rem; }
+            .slide-subtitle{ font-size: 0.85rem; }
+            .card-heading  { font-size: 0.95rem; }
+            .stat-number   { font-size: 1.5rem; }
+            .img-hero      { width: 75px; height: 75px; }
+            .nav-btn       { padding: 7px 10px; font-size: 0.68rem; }
+            .stats-row     { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -1301,13 +781,11 @@
             </div>
             <div class="section-label anim-fade-up d2">Exposición de Derecho</div>
             <h1 class="slide-title large anim-fade-up d3">Evolución Constitucional<br>en Colombia</h1>
-
             <div class="flag-bar anim-fade-in d3">
                 <span class="flag-yellow"></span>
                 <span class="flag-blue"></span>
                 <span class="flag-red"></span>
             </div>
-
             <div class="integrantes-box anim-fade-up d4">
                 <div class="integrantes-label">Integrantes</div>
                 <div class="integrantes-names">
@@ -1316,7 +794,6 @@
                     <span>Marco Martínez</span><span class="sep"></span>
                 </div>
             </div>
-
             <div class="stats-row anim-fade-up d5">
                 <div class="stat-box">
                     <div class="stat-number">9+</div>
@@ -1342,11 +819,10 @@
             <div class="slide-num">02</div>
             <div class="section-label anim-fade-up d1">Introducción</div>
             <h2 class="slide-title anim-fade-up d2">Contexto General</h2>
-            <p class="content-text anim-fade-up d3" style="margin-bottom: 30px;">
+            <p class="content-text anim-fade-up d3" style="margin-bottom: 24px;">
                 La evolución constitucional de Colombia refleja un proceso dinámico marcado por guerras civiles,
                 cambios ideológicos entre <strong style="color:#fff">centralismo y federalismo</strong>, y pugnas
-                entre
-                <strong style="color:#fff">liberales y conservadores</strong>.
+                entre <strong style="color:#fff">liberales y conservadores</strong>.
             </p>
             <div class="timeline anim-fade-up d4">
                 <div class="timeline-item">
@@ -1382,7 +858,7 @@
             <div class="split-content">
                 <div class="section-label anim-fade-up d1">1810 – 1821</div>
                 <h2 class="slide-title anim-fade-up d2">Inicio Republicano</h2>
-                <p class="content-text anim-fade-up d3" style="margin-bottom: 24px;">
+                <p class="content-text anim-fade-up d3" style="margin-bottom: 20px;">
                     Tras el grito de independencia de 1810, surgieron constituciones provinciales con ideas mixtas
                     monárquicas y autonomistas.
                 </p>
@@ -1426,8 +902,7 @@
             <div class="split-content">
                 <div class="section-label anim-fade-up d1">1821 · Primera Constitución Nacional</div>
                 <h2 class="slide-title anim-fade-up d2">Constitución de Cúcuta</h2>
-                <p class="slide-subtitle anim-fade-up d3" style="text-align:left;">Gran Colombia: Colombia, Venezuela y
-                    Ecuador</p>
+                <p class="slide-subtitle anim-fade-up d3" style="text-align:left;">Gran Colombia: Colombia, Venezuela y Ecuador</p>
                 <div class="card-grid anim-fade-up d4" style="max-width:100%;">
                     <div class="card">
                         <div class="card-label">Forma de gobierno</div>
@@ -1465,12 +940,11 @@
             <div class="slide-num">05</div>
             <div class="section-label anim-fade-up d1">Desintegración y Nueva Granada</div>
             <h2 class="slide-title anim-fade-up d2">Constituciones de 1830 y 1832</h2>
-            <div class="card-grid anim-fade-up d3" style="margin-top: 20px;">
+            <div class="card-grid anim-fade-up d3" style="margin-top: 18px;">
                 <div class="card">
                     <div class="card-year">1830</div>
                     <div class="card-heading">Post-separación</div>
-                    <p>Tras separación de Venezuela y Ecuador. Constitución centralista, presidencial con período de 8
-                        años, católica oficial.</p>
+                    <p>Tras separación de Venezuela y Ecuador. Constitución centralista, presidencial con período de 8 años, católica oficial.</p>
                     <span class="tag tag-central">Centralista</span>
                     <span class="tag tag-conserv">Conservadora</span>
                     <div class="vigencia">⏱ Vigencia: 2 años</div>
@@ -1478,8 +952,7 @@
                 <div class="card">
                     <div class="card-year">1832</div>
                     <div class="card-heading">República de la Nueva Granada</div>
-                    <p>Liberal, descentralizada, presidencial con período de 4 años. Estableció la igualdad ante la ley.
-                    </p>
+                    <p>Liberal, descentralizada, presidencial con período de 4 años. Estableció la igualdad ante la ley.</p>
                     <span class="tag tag-liberal">Liberal</span>
                     <span class="tag tag-federal">Descentralizada</span>
                     <div class="vigencia">⏱ Vigencia: 11 años</div>
@@ -1496,12 +969,11 @@
             <div class="slide-num">06</div>
             <div class="section-label anim-fade-up d1">Desintegración y Nueva Granada</div>
             <h2 class="slide-title anim-fade-up d2">Constituciones de 1843 y 1853</h2>
-            <div class="card-grid anim-fade-up d3" style="margin-top: 20px;">
+            <div class="card-grid anim-fade-up d3" style="margin-top: 18px;">
                 <div class="card">
                     <div class="card-year">1843</div>
                     <div class="card-heading">Regreso Conservador</div>
-                    <p>Centralista con sufragio restringido. Un retorno al control del poder central y la limitación del
-                        voto.</p>
+                    <p>Centralista con sufragio restringido. Un retorno al control del poder central y la limitación del voto.</p>
                     <span class="tag tag-conserv">Conservadora</span>
                     <span class="tag tag-central">Centralista</span>
                     <div class="vigencia">⏱ Vigencia: 10 años</div>
@@ -1509,8 +981,7 @@
                 <div class="card">
                     <div class="card-year">1853</div>
                     <div class="card-heading">Liberal Radical</div>
-                    <p>Libertad religiosa, separación Iglesia-Estado, <strong style="color:#fff">abolición total de la
-                            esclavitud</strong>, mayor autonomía provincial.</p>
+                    <p>Libertad religiosa, separación Iglesia-Estado, <strong style="color:#fff">abolición total de la esclavitud</strong>, mayor autonomía provincial.</p>
                     <span class="tag tag-liberal">Liberal radical</span>
                     <div class="vigencia">⏱ Vigencia: 5 años</div>
                 </div>
@@ -1527,7 +998,7 @@
             <div class="split-content">
                 <div class="section-label anim-fade-up d1">1858 – 1863</div>
                 <h2 class="slide-title anim-fade-up d2">Federalismo Extremo</h2>
-                <div class="card-grid anim-fade-up d3" style="margin-top: 20px; max-width:100%;">
+                <div class="card-grid anim-fade-up d3" style="margin-top: 18px; max-width:100%;">
                     <div class="card">
                         <div class="card-year">1858</div>
                         <div class="card-heading">Confederación Granadina</div>
@@ -1538,9 +1009,7 @@
                     <div class="card">
                         <div class="card-year">1863</div>
                         <div class="card-heading">Constitución de Rionegro</div>
-                        <p>Estados Unidos de Colombia con 9 estados. Federalismo radical, presidencial con período de
-                            solo 2
-                            años y libertades amplias.</p>
+                        <p>Estados Unidos de Colombia con 9 estados. Federalismo radical, presidencial con período de solo 2 años y libertades amplias.</p>
                         <span class="tag tag-federal">Federal radical</span>
                         <div class="vigencia">⏱ Vigencia: 23 años (generó inestabilidad)</div>
                     </div>
@@ -1563,13 +1032,10 @@
             <div class="section-label anim-fade-up d1">1886 – 1991 · La más duradera</div>
             <h2 class="slide-title anim-fade-up d2">Centralismo Duradero</h2>
             <p class="slide-subtitle anim-fade-up d3">Regeneración de Rafael Núñez — República de Colombia</p>
-            <div class="card-grid single-col anim-scale-in d3" style="margin-bottom: 18px;">
+            <div class="card-grid single-col anim-scale-in d3" style="margin-bottom: 16px;">
                 <div class="card" style="text-align:center;">
-                    <div class="card-heading" style="font-size:1.15rem;">Unitaria · Centralista · Presidencialista ·
-                        Católica Oficial</div>
-                    <p>La constitución más duradera en la historia de Colombia con <strong style="color:#fff">105 años
-                            de vigencia</strong>. Estabilizó el país tras guerras civiles, pero limitó el pluralismo.
-                    </p>
+                    <div class="card-heading" style="font-size:1.1rem;">Unitaria · Centralista · Presidencialista · Católica Oficial</div>
+                    <p>La constitución más duradera en la historia de Colombia con <strong style="color:#fff">105 años de vigencia</strong>. Estabilizó el país tras guerras civiles, pero limitó el pluralismo.</p>
                 </div>
             </div>
             <div class="card-grid three-col anim-fade-up d4">
@@ -1606,14 +1072,12 @@
             <div class="split-content">
                 <div class="section-label anim-fade-up d1">7 de julio de 1991</div>
                 <h2 class="slide-title anim-fade-up d2">Constitución Actual</h2>
-                <p class="slide-subtitle anim-fade-up d3" style="text-align:left;">Asamblea Nacional Constituyente —
-                    Incluyendo exguerrilleros del M-19</p>
+                <p class="slide-subtitle anim-fade-up d3" style="text-align:left;">Asamblea Nacional Constituyente — Incluyendo exguerrilleros del M-19</p>
                 <div class="card-grid anim-fade-up d4" style="max-width:100%;">
                     <div class="card">
                         <div class="card-label">Contexto</div>
                         <div class="card-heading">Crisis de los años 80</div>
-                        <p>Violencia, narcotráfico, guerrilla y el movimiento de la <strong style="color:#fff">"Séptima
-                                Papeleta"</strong> impulsaron el cambio constitucional.</p>
+                        <p>Violencia, narcotráfico, guerrilla y el movimiento de la <strong style="color:#fff">"Séptima Papeleta"</strong> impulsaron el cambio constitucional.</p>
                     </div>
                     <div class="card">
                         <div class="card-label">Naturaleza</div>
@@ -1624,14 +1088,12 @@
                     <div class="card">
                         <div class="card-label">Mecanismos</div>
                         <div class="card-heading">Nuevas Instituciones</div>
-                        <p>Acción de tutela, reconocimiento de diversidad étnica, Corte Constitucional y Fiscalía
-                            independiente.</p>
+                        <p>Acción de tutela, reconocimiento de diversidad étnica, Corte Constitucional y Fiscalía independiente.</p>
                     </div>
                     <div class="card">
                         <div class="card-label">Reformas</div>
                         <div class="card-heading">Más de 30 reformas</div>
-                        <p>Reelección presidencial temporal (2005, eliminada 2015), equilibrio de poderes (2015), entre
-                            otras.</p>
+                        <p>Reelección presidencial temporal (2005, eliminada 2015), equilibrio de poderes (2015), entre otras.</p>
                     </div>
                 </div>
             </div>
@@ -1646,7 +1108,7 @@
             <div class="slide-num">10</div>
             <div class="section-label anim-fade-up d1">Conclusión</div>
             <h2 class="slide-title anim-fade-up d2">De la Inestabilidad<br>a la Inclusión</h2>
-            <div class="stats-row anim-scale-in d3" style="margin-bottom:28px;">
+            <div class="stats-row anim-scale-in d3" style="margin-bottom: 24px;">
                 <div class="stat-box">
                     <div class="stat-number">8</div>
                     <div class="stat-label">Constituciones en 65 años<br>(Siglo XIX)</div>
@@ -1676,25 +1138,21 @@
             <div class="slide-num">11</div>
             <div class="section-label anim-fade-up d1">Fuentes</div>
             <h2 class="slide-title anim-fade-up d2">Referencias</h2>
-            <ul class="bullet-list anim-fade-up d3" style="margin-top: 20px;">
-                <li>Archivo General de la Nación: <strong style="color:#fff">Constituciones de Colombia</strong>
-                    (archivogeneral.gov.co)</li>
-                <li>Señalmemoria: <strong style="color:#fff">La evolución constitucional de Colombia</strong>
-                    (senalmemoria.co)</li>
-                <li>SciELO: <strong style="color:#fff">200 años de Constituciones nacionales colombianas</strong>
-                    (1821–2021)</li>
+            <ul class="bullet-list anim-fade-up d3" style="margin-top: 18px;">
+                <li>Archivo General de la Nación: <strong style="color:#fff">Constituciones de Colombia</strong> (archivogeneral.gov.co)</li>
+                <li>Señalmemoria: <strong style="color:#fff">La evolución constitucional de Colombia</strong> (senalmemoria.co)</li>
+                <li>SciELO: <strong style="color:#fff">200 años de Constituciones nacionales colombianas</strong> (1821–2021)</li>
                 <li>Dejusticia: <strong style="color:#fff">Treinta años de la Constitución de 1991</strong></li>
             </ul>
-            <div class="flag-bar anim-fade-in d4" style="margin-top:35px;">
+            <div class="flag-bar anim-fade-in d4" style="margin-top: 30px;">
                 <span class="flag-yellow"></span>
                 <span class="flag-blue"></span>
                 <span class="flag-red"></span>
             </div>
-            <p class="content-text anim-fade-up d5" style="margin-top:14px; font-size:0.85rem; opacity: 0.7;">¡Gracias
-                por su atención!</p>
+            <p class="content-text anim-fade-up d5" style="margin-top: 12px; font-size: 0.85rem; opacity: 0.7;">¡Gracias por su atención!</p>
         </div>
 
-    </div>
+    </div><!-- /slides-container -->
 
     <!-- ── Navigation Bar ── -->
     <div class="nav-bar">
@@ -1710,21 +1168,19 @@
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const PARTICLE_COUNT = 45;
+        const PARTICLE_COUNT = window.innerWidth < 640 ? 20 : 45;
 
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
+            canvas.width  = window.innerWidth;
             canvas.height = window.innerHeight;
         }
 
         class Particle {
-            constructor() {
-                this.reset();
-            }
+            constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
+                this.size   = Math.random() * 2 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 0.3;
                 this.speedY = (Math.random() - 0.5) * 0.3;
                 this.opacity = Math.random() * 0.3 + 0.05;
@@ -1736,45 +1192,41 @@
                 this.opacity += this.fadeDir * 0.002;
                 if (this.opacity > 0.35) this.fadeDir = -1;
                 if (this.opacity < 0.03) this.fadeDir = 1;
-                if (this.x < -20 || this.x > canvas.width + 20 || this.y < -20 || this.y > canvas.height + 20) {
-                    this.reset();
-                }
+                if (this.x < -20 || this.x > canvas.width+20 || this.y < -20 || this.y > canvas.height+20) this.reset();
             }
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(212, 168, 67, ${this.opacity})`;
+                ctx.fillStyle = `rgba(212,168,67,${this.opacity})`;
                 ctx.fill();
             }
         }
 
         function initParticles() {
             particles = [];
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.push(new Particle());
-            }
+            for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
         }
+
+        const isMobile = window.innerWidth < 640;
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            particles.forEach(p => { p.update(); p.draw(); });
 
-            // Draw connections
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(212, 168, 67, ${0.03 * (1 - dist / 150)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+            if (!isMobile) {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(212,168,67,${0.03*(1-dist/150)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
                     }
                 }
             }
@@ -1790,28 +1242,23 @@
         let currentSlide = 0;
         const totalSlides = document.querySelectorAll('.slide').length;
 
+        function resetAnimations(slideEl) {
+            slideEl.querySelectorAll('[class*="anim-"]').forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; // reflow
+                el.style.animation = '';
+            });
+        }
+
         function changeSlide(dir) {
             const next = currentSlide + dir;
             if (next < 0 || next >= totalSlides) return;
-
             const slides = document.querySelectorAll('.slide');
-            // Remove animations from current
-            slides[currentSlide].querySelectorAll('[class*="anim-"]').forEach(el => {
-                el.style.animation = 'none';
-                el.offsetHeight; // trigger reflow
-                el.style.animation = '';
-            });
-
             slides[currentSlide].classList.remove('active');
+            // scroll new slide back to top
+            slides[next].scrollTop = 0;
             currentSlide = next;
-
-            // Reset animations for new slide
-            slides[currentSlide].querySelectorAll('[class*="anim-"]').forEach(el => {
-                el.style.animation = 'none';
-                el.offsetHeight;
-                el.style.animation = '';
-            });
-
+            resetAnimations(slides[currentSlide]);
             slides[currentSlide].classList.add('active');
             updateUI();
         }
@@ -1821,11 +1268,8 @@
             const slides = document.querySelectorAll('.slide');
             slides[currentSlide].classList.remove('active');
             currentSlide = index;
-            slides[currentSlide].querySelectorAll('[class*="anim-"]').forEach(el => {
-                el.style.animation = 'none';
-                el.offsetHeight;
-                el.style.animation = '';
-            });
+            slides[currentSlide].scrollTop = 0;
+            resetAnimations(slides[currentSlide]);
             slides[currentSlide].classList.add('active');
             updateUI();
         }
@@ -1834,27 +1278,33 @@
             document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-            document.getElementById('progressBar').style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+            document.getElementById('progressBar').style.width = `${((currentSlide+1)/totalSlides)*100}%`;
         }
 
-        // Keyboard navigation
+        // Keyboard
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-                e.preventDefault();
-                changeSlide(1);
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                changeSlide(-1);
-            } else if (e.key === 'Home') {
-                goToSlide(0);
-            } else if (e.key === 'End') {
-                goToSlide(totalSlides - 1);
-            }
+            if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); changeSlide(1); }
+            else if (['ArrowLeft','ArrowUp'].includes(e.key))   { e.preventDefault(); changeSlide(-1); }
+            else if (e.key === 'Home') goToSlide(0);
+            else if (e.key === 'End')  goToSlide(totalSlides - 1);
         });
+
+        // Touch swipe
+        let touchStartX = 0, touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                changeSlide(dx < 0 ? 1 : -1);
+            }
+        }, { passive: true });
 
         updateUI();
     </script>
 
 </body>
-
 </html>
